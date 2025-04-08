@@ -1,0 +1,33 @@
+<div>
+  <h2>הזמנת סחורה</h2>
+
+  <form [formGroup]="orderForm" (ngSubmit)="submitOrder()">
+
+    <label>בחר ספק:</label>
+    <select formControlName="supplierId" (change)="onSupplierSelectedById($event)">
+      <option value="" disabled selected>בחר ספק</option>
+      <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+        {{ supplier.companyName }}
+      </option>
+    </select>
+    <div *ngIf="orderForm.get('supplierId')?.touched && orderForm.get('supplierId')?.invalid" class="error">
+      חובה לבחור ספק
+    </div>
+
+    <div *ngIf="selectedSupplier">
+      <h3>מוצרים:</h3>
+      <div formArrayName="orderItems" *ngFor="let item of orderItems.controls; let i = index">
+        <div [formGroupName]="i">
+          {{ item.value.productName }} - מחיר: {{ item.value.pricePerItem }} ₪ - כמות:
+          <input type="number" formControlName="quantity" min="1">
+          <div *ngIf="item.get('quantity')?.touched && item.get('quantity')?.invalid" class="error">
+            הכמות אינה חוקית
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit">שלח הזמנה</button>
+
+  </form>
+</div>

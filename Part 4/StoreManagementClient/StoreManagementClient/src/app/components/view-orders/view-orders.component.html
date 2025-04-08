@@ -1,0 +1,62 @@
+<h2>סטטוס הזמנות</h2>
+
+<div *ngIf="isManager">
+  <button [class.active]="managerViewMode === 'pending'" (click)="setManagerViewMode('pending')">הזמנות ממתינות לאישור השלמה</button>
+  <button [class.active]="managerViewMode === 'all'" (click)="setManagerViewMode('all')">כל ההזמנות</button>
+</div>
+
+<div *ngIf="loading">
+  טוען הזמנות...
+</div>
+
+<div *ngIf="error" class="error">
+  {{ error }}
+</div>
+
+<div *ngIf="!loading && !error && ordersToDisplay.length === 0">
+  אין הזמנות להצגה.
+</div>
+
+<table *ngIf="!loading && !error && ordersToDisplay.length > 0">
+  <thead>
+    <tr>
+      <th>מספר הזמנה</th>
+      <th>סטטוס</th>
+      <th>מוצרים בהזמנה</th>
+      <th>פעולות</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of ordersToDisplay">
+      <td>{{ order.id }}</td>
+      <td>
+        <ng-container [ngSwitch]="order.status">
+          <span *ngSwitchCase="0">ממתין</span>
+          <span *ngSwitchCase="1">בתהליך</span>
+          <span *ngSwitchCase="2">הושלם</span>
+          <span *ngSwitchDefault>{{ order.status }}</span>
+        </ng-container>
+      </td>
+      <td>
+        <ul style="list-style: none; padding: 0;">
+          <li *ngFor="let product of order.orderproducts">
+            {{ product.productName }} (כמות: {{ product.quantity }}, מחיר ליחידה: {{ product.pricePerItem | number:'1.2-2' }})
+          </li>
+        </ul>
+      </td>
+      <td>
+        <button *ngIf="canApproveSupplierOrder(order)" (click)="approveSupplierOrder(order.id)">אשר הזמנה</button>
+        <button *ngIf="canApproveStoreOwnerOrder(order)" (click)="approveStoreOwnerOrder(order.id)">אשר כהושלם</button>
+        <span *ngIf="order.status === orderStatusEnum.Completed">הושלמה</span>
+        <span *ngIf="!isManager && order.status !== orderStatusEnum.Pending">התקבל</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  button.active {
+    font-weight: bold;
+  }
+</style>
+

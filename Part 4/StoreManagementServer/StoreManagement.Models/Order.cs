@@ -12,12 +12,19 @@ namespace StoreManagement.Models
     public class Order
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Status { get; set; } // "Pending", "In Process", "Completed"
+        public OrderStatus Status { get; set; } 
         [ForeignKey("Supplier")]
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; }
-
+        public ICollection<OrderProducts> OrderProducts { get; set; } = new List<OrderProducts>();
+    }
+    public enum OrderStatus
+    {
+        Pending,
+        InProcess,
+        Completed
     }
 }

@@ -1,0 +1,70 @@
+h2 {
+    text-align: center;
+    color: #4c4c49; /* אפור כהה */
+    margin-bottom: 20px;
+  }
+  
+  button {
+    margin: 5px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #d0efff; /* תכלת רך */
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button.active,
+  button:hover {
+    background-color: #a7d3f3; 
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    direction: rtl;
+  }
+  
+  th {
+    background-color: #cce5f6; 
+    padding: 10px;
+    border-bottom: 2px solid #4c4c49;
+    color: #4c4c49;
+  }
+  
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #fef8f5; 
+  }
+  
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  td button {
+    background-color: #ffa07a; 
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+  
+  td button:hover {
+    background-color: #e98e68;
+  }
+  

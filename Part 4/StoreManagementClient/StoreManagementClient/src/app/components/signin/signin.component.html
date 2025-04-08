@@ -1,0 +1,10 @@
+<h2>כניסה</h2>
+<form (ngSubmit)="signin()">
+  <div>
+    <label for="password">סיסמה:</label>
+    <input type="password" id="password" name="password" [(ngModel)]="password" required>
+  </div>
+  <button type="submit">התחבר</button>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  <button type="button" routerLink="/Signup">הרשמה</button>
+</form>

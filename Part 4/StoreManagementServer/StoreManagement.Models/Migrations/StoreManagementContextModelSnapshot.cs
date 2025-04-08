@@ -21,6 +21,23 @@ namespace StoreManagement.Models.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("StoreManagement.DTO.Manager", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manager");
+                });
+
             modelBuilder.Entity("StoreManagement.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -29,9 +46,8 @@ namespace StoreManagement.Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
@@ -43,6 +59,26 @@ namespace StoreManagement.Models.Migrations
                     b.ToTable("Orders_Tbl");
                 });
 
+            modelBuilder.Entity("StoreManagement.Models.OrderProducts", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrdersProduct_Tbl");
+                });
+
             modelBuilder.Entity("StoreManagement.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -51,22 +87,11 @@ namespace StoreManagement.Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MinOrderQuantity")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("Products_Tbl");
                 });
@@ -83,6 +108,10 @@ namespace StoreManagement.Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -96,10 +125,37 @@ namespace StoreManagement.Models.Migrations
                     b.ToTable("Suppliers_Tbl");
                 });
 
+            modelBuilder.Entity("StoreManagement.Models.SupplierProduct", b =>
+                {
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
+
+                    b.Property<int>("MinimumQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PricePerItem")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SupplierId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("SupplierProduct_Tbl");
+                });
+
             modelBuilder.Entity("StoreManagement.Models.Order", b =>
                 {
                     b.HasOne("StoreManagement.Models.Supplier", "Supplier")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -107,20 +163,54 @@ namespace StoreManagement.Models.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("StoreManagement.Models.Product", b =>
+            modelBuilder.Entity("StoreManagement.Models.OrderProducts", b =>
                 {
+                    b.HasOne("StoreManagement.Models.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoreManagement.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StoreManagement.Models.SupplierProduct", b =>
+                {
+                    b.HasOne("StoreManagement.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("StoreManagement.Models.Supplier", "Supplier")
-                        .WithMany("Products")
+                        .WithMany("SupplierProduct")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Product");
+
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("StoreManagement.Models.Order", b =>
+                {
+                    b.Navigation("OrderProducts");
                 });
 
             modelBuilder.Entity("StoreManagement.Models.Supplier", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Orders");
+
+                    b.Navigation("SupplierProduct");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,39 @@
+<form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="companyName">שם החברה:</label>
+    <input id="companyName" formControlName="companyName" />
+  </div>
+  <div>
+    <label for="representativeName">שם נציג:</label>
+    <input id="representativeName" formControlName="representativeName" />
+  </div>
+  <div>
+    <label for="phoneNumber">מספר טלפון:</label>
+    <input id="phoneNumber" formControlName="phoneNumber" />
+  </div>
+  <div>
+    <label for="password">סיסמה:</label>
+    <input id="password" formControlName="password" type="password" />
+  </div>
+
+  <h3>רשימת המוצרים:</h3>
+  <ul>
+    <li *ngFor="let product of products">
+      {{ product.productName }} - מחיר: {{ product.pricePerItem }} ₪ | מינימום הזמנה: {{ product.minOrderQuantity }}
+    </li>
+  </ul>
+
+  <div [formGroup]="newProductForm">
+    <label>שם מוצר:</label>
+    <input formControlName="productName" /><br />
+    <label>מחיר ליחידה:</label>
+    <input formControlName="pricePerItem" type="number" /><br />
+    <label>מינימום להזמנה:</label>
+    <input formControlName="minOrderQuantity" type="number" /><br />
+    <button type="button" (click)="addProduct()">הוסף מוצר</button>
+  </div>
+
+  <button type="submit" [disabled]="supplierForm.invalid">שלח</button>
+  <button type="button" routerLink="/Signin">כניסה</button>
+</form>
+
